@@ -4,6 +4,7 @@ import { useForm } from "@inertiajs/inertia-vue3";
 import Dialog from "@/Components/Common/DialogModal";
 import Button from "@/Components/Common/Button";
 import Input from "@/Components/Common/Input";
+import DateTimePicker from "@/Components/Common/DateTimePickers/DateTimePicker.vue";
 import moment from "moment";
 
 const emit = defineEmits(["close"]);
@@ -87,6 +88,13 @@ const onClose = () => {
                 name="title"
                 label="Title"
                 v-model="form.title"
+                class="mb-6"
+            />
+
+            <DateTimePicker
+                name="starts_at"
+                label="Starts_at"
+                v-model="form.starts_at"
                 class="mb-6"
             />
 
