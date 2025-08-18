@@ -20,7 +20,7 @@ const editing = ref(false);
 const form = useForm({
     title: "",
     starts_at: null,
-    ends_at: null,
+    //ends_at: null,
 });
 
 // Called when the user clicks on the "Add new" button
