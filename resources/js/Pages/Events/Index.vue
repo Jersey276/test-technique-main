@@ -7,6 +7,7 @@ import AddEditDialog from "./Partials/AddEditDialog";
 import Button from "@/Components/Common/Button";
 import Dialog from "@/Components/Common/DialogModal";
 import Table from "@/Components/Common/Table";
+import vueFeather from "vue-feather";
 
 const format = "YYYY-MM-DD";
 
@@ -16,7 +17,7 @@ const props = defineProps({
         default: [],
     },
     starts_at: String,
-    ends_at: String,
+    //ends_at: String,
 });
 
 const dateFilters = ref([null, null]);
@@ -94,7 +95,7 @@ const onDelete = () => {
                         <span
                             class="px-2 text-gray-700 hover:text-blue-500 cursor-pointer transition"
                         >
-                            <vue-feather
+                            <vueFeather
                                 type="edit"
                                 size="1.3rem"
                                 @click="itemToEdit = item"
@@ -103,7 +104,7 @@ const onDelete = () => {
                         <span
                             class="px-2 text-gray-700 hover:text-red-500 cursor-pointer transition"
                         >
-                            <vue-feather
+                            <vueFeather
                                 type="trash"
                                 size="1.3rem"
                                 @click="itemToDelete = item"

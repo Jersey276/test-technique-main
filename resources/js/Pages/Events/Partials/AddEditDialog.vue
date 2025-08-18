@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3";
 import Dialog from "@/Components/Common/DialogModal";
 import Button from "@/Components/Common/Button";
 import Input from "@/Components/Common/Input";
+import moment from "moment";
 
 const emit = defineEmits(["close"]);
 
@@ -22,6 +23,16 @@ const form = useForm({
     starts_at: null,
     //ends_at: null,
 });
+
+watch (() => props.itemToEdit, (itemSelected) => {
+    if (itemSelected !== null) {
+        form.reset();
+        form.title = itemSelected.title;
+        form.starts_at = moment(itemSelected.starts_at);
+        show.value = true;
+        editing.value = true;
+    }
+})
 
 // Called when the user clicks on the "Add new" button
 const onAddNew = () => {
