@@ -1,10 +1,12 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, onBeforeUnmount, ref } from "vue";
 import moment from "moment";
-import Button from "../Button";
 import Calendar from "./Partials/CalendarPopup";
 
 defineEmits(["update:modelValue"]);
+
+const showPopup = ref(false);
+const picker = ref(null);
 
 const props = defineProps({
   modelValue: {
@@ -19,21 +21,21 @@ const props = defineProps({
   },
 });
 
-// Represents whether or not the datepicker popup is open
-const showPopup = ref(false);
-
-const onBlur = (event) => {
-  // Check if the clicked item was inside the current component
-  if (!event.currentTarget.contains(event.relatedTarget)) {
+const clickOutside = (event) => {
+  if (picker.value && !picker.value.contains(event.target)) {
     showPopup.value = false;
-  } else {
-    event.currentTarget.focus();
   }
 };
 
-// Whether or not time or date fields need to be shown
-const hasTime = computed(() => props.type !== "date");
-const hasDate = computed(() => props.type !== "time");
+const hasDate = computed(() => props.type !== 'time');
+const hasTime = computed(() => props.type !== 'date');
+
+onMounted(() => {
+  document.addEventListener("mousedown", clickOutside);
+});
+onBeforeUnmount(() => {
+  document.removeEventListener("mousedown", clickOutside);
+});
 
 // Format to be used to show the selected value
 const format = computed(() => {
@@ -53,21 +55,22 @@ const format = computed(() => {
     <label class="block font-medium text-sm text-gray-700">
       <span v-if="label">{{ label }}</span>
     </label>
-    <div class="relative">
+    <div class="relative" ref="picker">
       <button
         class="px-3 h-12 w-full border border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm text-left"
         @click="showPopup = true"
-        @blur="onBlur"
       >
         {{modelValue?.format(format)}}
-        <Calendar
-          :show="showPopup"
-          :value="modelValue"
-          :with-date="hasDate"
-          :with-time="hasTime"
-          @change="$emit('update:modelValue', $event)"
-        />
       </button>
+      <div class="absolute z-10 left-0 w-full">
+        <Calendar
+        :show="showPopup"
+        :value="modelValue"
+        :with-date="hasDate"
+        :with-time="hasTime"
+        @change="$emit('update:modelValue', $event)"
+      />
+      </div>
     </div>
   </div>
 </template>
