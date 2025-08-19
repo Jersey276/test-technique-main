@@ -33,6 +33,6 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+    Route::resource('events', EventController::class);
 });
 
-Route::resource('events', EventController::class);
