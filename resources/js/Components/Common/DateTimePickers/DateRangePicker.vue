@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import moment from "moment";
 import Calendar from "./Partials/CalendarPopup";
 
@@ -16,42 +16,43 @@ const props = defineProps({
   },
 });
 
-const endDatePicker = ref(null);
+const startpicker = ref(null);
+const endpicker = ref(null);
 
 // Represents whether or not the datepicker popup is open for each field
 const showStartDatePopup = ref(false);
 const showEndDatePopup = ref(false);
 
-const onStartDateChange = (date) => {
-  // Timeouts are used to ensure that the event is launched after the blur event
-  setTimeout(() => {
-    emit("update:modelValue", [date, props.modelValue?.[1]]);
-    // Open the next field if no value exists
-    if (!props.modelValue?.[1]) {
-      endDatePicker.value.focus();
-      endDatePicker.value.click();
-    }
+const clickOutside = (event) => {
+  if (
+    showStartDatePopup.value &&
+    startpicker.value &&
+    !startpicker.value.contains(event.target)
+  ) {
     showStartDatePopup.value = false;
-  }, 0);
+  }
+  if (
+    showEndDatePopup.value &&
+    endpicker.value &&
+    !endpicker.value.contains(event.target)
+  ) {
+    showEndDatePopup.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("mousedown", clickOutside);
+});
+onBeforeUnmount(() => {
+  document.removeEventListener("mousedown", clickOutside);
+});
+
+const onStartDateChange = (date) => {
+  emit("update:modelValue", [date, props.modelValue?.[1]]);
 };
 
 const onEndDateChange = (date) => {
-  // Timeouts are used to ensure that the event is launched after the blur event
-  setTimeout(() => {
-    emit("update:modelValue", [props.modelValue?.[0], date]);
-    showEndDatePopup.value = false;
-  }, 0);
-};
-
-// Common event fired after one of the date picker buttons loses focus
-const onBlur = (event) => {
-  // Check if the clicked item was inside the current component
-  if (!event.currentTarget.contains(event.relatedTarget)) {
-    showStartDatePopup.value = false;
-    showEndDatePopup.value = false;
-  } else {
-    event.currentTarget.focus();
-  }
+  emit("update:modelValue", [props.modelValue?.[0], date]);
 };
 </script>
 
@@ -63,33 +64,38 @@ const onBlur = (event) => {
     <label class="block font-medium text-sm text-gray-700">
       <span>To</span>
     </label>
-    <button class="date-button rounded-l-md" @click="showStartDatePopup = true" @blur="onBlur">
-      <div>
-        {{modelValue?.[0]?.format(format)}}
+    <div class="relative">
+      <button class="date-button rounded-l-md" @click="showStartDatePopup = true">
+        {{ modelValue?.[0] ? modelValue[0].format(format) : '--/--/--' }}
+      </button>
+      <div class="absolute z-10 left-0 w-full" ref="startpicker">
         <Calendar
           :show="showStartDatePopup"
           :value="modelValue?.[0]"
           :with-time="false"
+          :with-date="true"
           @change="onStartDateChange"
         />
       </div>
-    </button>
-    <button
-      ref="endDatePicker"
-      class="date-button rounded-r-md"
-      @click="showEndDatePopup = true"
-      @blur="onBlur"
-    >
-      <div>
-        {{modelValue?.[1]?.format(format)}}
-        <Calendar
-          :show="showEndDatePopup"
-          :value="modelValue?.[1]"
-          :with-time="false"
-          @change="onEndDateChange"
-        />
+    </div>
+    <div class="relative">
+      <button
+        ref="endDatePicker"
+        class="date-button rounded-r-md"
+        @click="showEndDatePopup = true"
+      >
+        {{ modelValue?.[1] ? modelValue[1].format(format) : '--/--/--' }}
+      </button>
+        <div class="absolute z-10 left-0 w-full" ref="endpicker">
+          <Calendar
+            :show="showEndDatePopup"
+            :value="modelValue?.[1]"
+            :with-time="false"
+            :with-date="true"
+            @change="onEndDateChange"
+          />
+        </div>
       </div>
-    </button>
   </div>
 </template>
 
