@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, onBeforeUnmount, ref } from "vue";
+import { computed, onMounted, onBeforeUnmount, ref, watch } from "vue";
 import moment from "moment";
 import Calendar from "./Partials/CalendarPopup";
 
@@ -19,6 +19,7 @@ const props = defineProps({
     validator: (val) => ["date", "datetime", "time"].includes(val),
     default: "datetime",
   },
+  error: String,
 });
 
 const clickOutside = (event) => {
@@ -26,6 +27,12 @@ const clickOutside = (event) => {
     showPopup.value = false;
   }
 };
+
+const inputError = ref(props.error || "");
+
+watch(() => props.error, (newError) => {
+  inputError.value = newError || "";
+});
 
 const hasDate = computed(() => props.type !== 'time');
 const hasTime = computed(() => props.type !== 'date');
@@ -62,15 +69,16 @@ const format = computed(() => {
       >
         {{modelValue?.format(format)}}
       </button>
-      <div class="absolute z-10 left-0 w-full">
+      <div class="absolute z-10 left-0">
         <Calendar
-        :show="showPopup"
-        :value="modelValue"
-        :with-date="hasDate"
-        :with-time="hasTime"
-        @change="$emit('update:modelValue', $event)"
-      />
+          :show="showPopup"
+          :value="modelValue"
+          :with-date="hasDate"
+          :with-time="hasTime"
+          @change="$emit('update:modelValue', $event)"
+        />
       </div>
+      <span v-if="inputError" class="text-red-500 text-sm mt-1">{{ inputError }}</span>
     </div>
   </div>
 </template>

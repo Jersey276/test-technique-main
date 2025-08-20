@@ -59,7 +59,7 @@ const onSubmit = () => {
         form.transform(transform).put(
             route("events.update", props.itemToEdit.id),
             requestParams,
-        );
+        )
     } else {
         form.transform(transform).post(route("events.store"), requestParams);
     }
@@ -89,20 +89,22 @@ const onClose = () => {
                 label="Title"
                 v-model="form.title"
                 class="mb-6"
+                :error="form.errors.title"
             />
 
             <DateTimePicker
                 name="starts_at"
-                label="Starts_at"
+                label="Starts at"
                 v-model="form.starts_at"
                 class="mb-6"
+                :error="form.errors.starts_at"
             />
 
             <template #footer>
                 <Button variant="secondary" class="mr-3" @click="onClose"
                     >Cancel</Button
                 >
-                <Button @click="onSubmit">Submit</Button>
+                <Button @click="onSubmit" :disabled="form.title === '' || form.starts_at === null">Submit</Button>
             </template>
         </Dialog>
     </div>

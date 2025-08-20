@@ -1,13 +1,20 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 
-defineProps({
+const props = defineProps({
   modelValue: String,
   label: String,
   name: {
     type: String,
     required: true,
   },
+  error: String,
+});
+
+const inputError = ref(props.error || "");
+
+watch(() => props.error, (newError) => {
+  inputError.value = newError || "";
 });
 
 defineEmits(["update:modelValue"]);
@@ -21,6 +28,7 @@ onMounted(() => {
 });
 
 defineExpose({ focus: () => input.value.focus() });
+console.log(inputError);
 </script>
 
 <template>
@@ -35,5 +43,6 @@ defineExpose({ focus: () => input.value.focus() });
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
     />
+    <span v-if="inputError != ''" class="text-red-500 text-sm mt-1">{{ inputError }}</span>
   </div>
 </template>
