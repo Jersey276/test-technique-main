@@ -36,7 +36,7 @@ function changePage(page) {
     }
 }
 function changePerPage(event) {
-    emit("per-page-changed", parseInt(event.target.value));
+    emit("per-page-changed", { per_page: parseInt(event.target.value) });
 }
 
 </script>
