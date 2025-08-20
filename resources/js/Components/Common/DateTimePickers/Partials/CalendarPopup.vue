@@ -64,6 +64,7 @@ const clearValue = (e) => {
       </template>
       <template v-if="selected.value !== null && isClearable">
         <vueFeather
+          class="cursor-pointer ml-2 text-gray-700 hover:text-red-500 transition"
           type="trash"
           size="1.3rem"
           @click="clearValue"
