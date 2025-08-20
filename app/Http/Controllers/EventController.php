@@ -21,7 +21,7 @@ class EventController extends Controller
         return Inertia::render('Events/Index', [
             'starts_at' => Request::get('starts_at'),
             'ends_at' => Request::get('ends_at'),
-            'events' => Event::isBetween(Request::get('starts_at'), Request::get('ends_at'))->orderByDate()->get()
+            'events' => Event::isBetween(Request::get('starts_at'), Request::get('ends_at'))->orderByDate()->paginate(Request::get('per_page')),
         ]);
     }
 
