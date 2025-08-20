@@ -12,6 +12,7 @@ const props = defineProps({
   },
   withDate: Boolean,
   withTime: Boolean,
+  isClearable: Boolean,
 });
 
 const selected = ref(props.value ? moment(props.value) : moment());
@@ -44,17 +45,29 @@ const onTimeChange = (e) => {
   emit("change", selected.value.clone());
 }
 
+const clearValue = (e) => {
+  selected.value = moment();
+  emit("change", null);
+}
+
 </script>
 <template>
-    <div v-show="show" class="bg-white border rounded shadow p-4 flex flex-row justify-between">
+    <div v-show="show" class="bg-white border rounded shadow p-4 flex flex-row justify-between items-center">
       <template v-if="withDate && withTime">
-        <input type="datetime-local" @change="onDateTimeChange" v-model="data.datetime"/>
+        <input type="datetime-local" @change="onDateTimeChange" v-model="data.dateTime"/>
       </template>
       <template v-else-if="withTime">
         <input type="time" @change="onTimeChange" v-model="data.time"/>
       </template>
       <template v-else-if="withDate">
         <input type="date" @change="onDateChange" v-model="data.date"/>
+      </template>
+      <template v-if="selected.value !== null && isClearable">
+        <vueFeather
+          type="trash"
+          size="1.3rem"
+          @click="clearValue"
+        />
       </template>
     </div>
 </template>
