@@ -162,8 +162,8 @@ const onDelete = () => {
                 </Table>
                 <Pagination
                     :total="props.events.total"
-                    :per-page="props.events.per_page"
-                    :current-page="props.events.current_page"
+                    :perPage="props.events.per_page"
+                    :currentPage="props.events.current_page"
                     :pages="props.events.links"
                     @page-changed="onPageChanged"
                     @per-page-changed="onPerPageChanged"
