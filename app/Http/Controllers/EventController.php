@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
@@ -24,12 +25,9 @@ class EventController extends Controller
         ]);
     }
 
-    public function store()
+    public function store(EventRequest $request)
     {
-        $data = Request::validate([
-            'title' => ['required', 'max:255'],
-            'starts_at' => ['required', 'date:Y-m-d H:i']
-        ]);
+        $data = $request->validated();
 
         Event::create([
             ...$data,
@@ -39,12 +37,9 @@ class EventController extends Controller
         return Redirect::back();
     }
 
-    public function update(Event $event)
+    public function update(EventRequest $request, Event $event)
     {
-        $data = Request::validate([
-            'title' => ['required', 'max:255'],
-            'starts_at' => ['required', 'date:Y-m-d H:i']
-        ]);
+        $data = $request->validated();
 
         $event->update([
             ...$data,
