@@ -45,7 +45,7 @@ function changePerPage(event) {
         <div>
             <span>Showing {{ (currentPage - 1) * perPage + 1 }} to {{ Math.min(currentPage * perPage, total) }} of {{ total }} results</span>
         </div>
-        <div v-if="pages.length > 1">
+        <div  v-if="totalPages > 1">
             <Button @click="changePage(currentPage - 1)" class="btn" :disabled="currentPage === 1">
                 <
             </Button>
@@ -62,6 +62,9 @@ function changePerPage(event) {
             <option value='10' selected>10</option>
             <option value='20'>20</option>
             <option value='50'>50</option>
+            <option value='100'>100</option>
+            <option value='250'>250</option>
+            <option value='500'>500</option>
         </select>
         </div>
     </div>
