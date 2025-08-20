@@ -57,7 +57,7 @@ const onEndDateChange = (date) => {
 </script>
 
 <template>
-  <div class="grid grid-cols-2">
+  <div class="grid grid-cols-2 gap-2">
     <label class="block font-medium text-sm text-gray-700">
       <span>From</span>
     </label>
@@ -65,15 +65,16 @@ const onEndDateChange = (date) => {
       <span>To</span>
     </label>
     <div class="relative">
-      <button class="date-button rounded-l-md" @click="showStartDatePopup = true">
-        {{ modelValue?.[0] ? modelValue[0].format(format) : '--/--/--' }}
+      <button class="date-button rounded-md" @click="showStartDatePopup = true">
+        {{ modelValue?.[0] ? modelValue[0].format(format) : '--/--/----' }}
       </button>
-      <div class="absolute z-10 left-0 w-full" ref="startpicker">
+      <div class="absolute z-10 left-0" ref="startpicker">
         <Calendar
           :show="showStartDatePopup"
           :value="modelValue?.[0]"
           :with-time="false"
           :with-date="true"
+          :is-clearable="true"
           @change="onStartDateChange"
         />
       </div>
@@ -81,17 +82,18 @@ const onEndDateChange = (date) => {
     <div class="relative">
       <button
         ref="endDatePicker"
-        class="date-button rounded-r-md"
+        class="date-button rounded-md"
         @click="showEndDatePopup = true"
       >
-        {{ modelValue?.[1] ? modelValue[1].format(format) : '--/--/--' }}
+        {{ modelValue?.[1] ? modelValue[1].format(format) : '--/--/----' }}
       </button>
-        <div class="absolute z-10 left-0 w-full" ref="endpicker">
+        <div class="absolute z-10 left-0" ref="endpicker">
           <Calendar
             :show="showEndDatePopup"
             :value="modelValue?.[1]"
             :with-time="false"
             :with-date="true"
+            :is-clearable="true"
             @change="onEndDateChange"
           />
         </div>
