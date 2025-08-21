@@ -106,7 +106,7 @@ const onDelete = () => {
                     />
                 </div>
                 <div class="w-6/12">
-                    <DateRangePicker v-model="dateFilters"/>
+                    <DateRangePicker v-model="dateFilters" is_clearable />
                 </div>
                 <div class="w-3/12"></div>
                 <Dialog

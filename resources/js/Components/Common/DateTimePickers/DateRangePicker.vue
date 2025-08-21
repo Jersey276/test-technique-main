@@ -2,6 +2,7 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import moment from "moment";
 import Calendar from "./Partials/CalendarPopup";
+import vueFeather from "vue-feather";
 
 const format = "DD/MM/YYYY";
 
@@ -13,6 +14,10 @@ const props = defineProps({
     validator: (value) =>
       value?.every((date) => !date || moment.isMoment(date)),
     default: [null, null],
+  },
+  is_clearable: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -40,6 +45,14 @@ const clickOutside = (event) => {
   }
 };
 
+function onClearStartDate() {
+  emit("update:modelValue", [null, props.modelValue?.[1]]);
+}
+
+function onClearEndDate() {
+  emit("update:modelValue", [props.modelValue?.[0], null]);
+}
+
 onMounted(() => {
   document.addEventListener("mousedown", clickOutside);
 });
@@ -65,9 +78,14 @@ const onEndDateChange = (date) => {
       <span>To</span>
     </label>
     <div class="relative">
-      <button class="date-button rounded-md" @click="showStartDatePopup = true">
-        {{ modelValue?.[0] ? modelValue[0].format(format) : '--/--/----' }}
-      </button>
+      <div class="border rounded-md flex justify-between">
+        <button class="date-button" @click="showStartDatePopup = true">
+          {{ modelValue?.[0] ? modelValue[0].format(format) : '--/--/----' }}
+        </button>
+        <button v-if="is_clearable" class="clear-button border-left mx-4" @click="onClearStartDate">
+          <vueFeather type="trash-2" class="w-4 h-4 text-gray-500" />
+        </button>
+      </div>
       <div class="absolute z-10 left-0" ref="startpicker">
         <Calendar
           :show="showStartDatePopup"
@@ -80,13 +98,18 @@ const onEndDateChange = (date) => {
       </div>
     </div>
     <div class="relative">
-      <button
-        ref="endDatePicker"
-        class="date-button rounded-md"
-        @click="showEndDatePopup = true"
-      >
-        {{ modelValue?.[1] ? modelValue[1].format(format) : '--/--/----' }}
-      </button>
+      <div class="border rounded-md flex justify-between">
+        <button
+          ref="endDatePicker"
+          class="date-button"
+          @click="showEndDatePopup = true"
+        >
+          {{ modelValue?.[1] ? modelValue[1].format(format) : '--/--/----' }}
+        </button>
+        <button v-if="is_clearable" class="clear-button border-left mx-4" @click="onClearEndDate">
+          <vueFeather type="trash-2" class="w-4 h-4 text-gray-500" />
+        </button>
+      </div>
         <div class="absolute z-10 left-0" ref="endpicker">
           <Calendar
             :show="showEndDatePopup"
@@ -103,6 +126,6 @@ const onEndDateChange = (date) => {
 
 <style lang="postcss" scoped>
 .date-button {
-  @apply relative px-3 h-12 w-full border border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 shadow-sm;
+  @apply relative px-3 h-12 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 shadow-sm;
 }
 </style>
