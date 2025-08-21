@@ -28,9 +28,24 @@ const today = moment();
 const selected = ref(props.modelValue && moment.isMoment(props.modelValue) ? props.modelValue.clone() : today.clone());
 const currentMonth = ref(selected.value.clone().startOf('month'));
 
+const monthValue = ref(currentMonth.value.month());
+const yearValue = ref(currentMonth.value.year());
+
+const months = computed(() => {
+    return moment.months().map((month, index) => ({
+        text: month,
+        value: index
+    }));
+});
+
+const years = computed(() => {
+    const arr = [];
+    for (let y = 1970; y <= 2100; y++) arr.push(y);
+    return arr;
+});
+
 const time = ref(selected.value.format('HH:mm'));
 
-console.log(currentMonth);
 
 watch(() => props.value, (newVal) => {
     if (newVal && moment.isMoment(newVal)) {
@@ -45,6 +60,15 @@ const daysInMonth = computed(() => {
 });
 const firstDayOfWeek = computed(() => {
     return currentMonth.value.day();
+});
+
+watch([monthValue, yearValue], ([newMonth, newYear]) => {
+    currentMonth.value = currentMonth.value.clone().year(newYear).month(newMonth).date(1);
+});
+
+watch(currentMonth, (newVal) => {
+    monthValue.value = newVal.month();
+    yearValue.value = newVal.year();
 });
 
 const weeks = computed(() => {
@@ -95,7 +119,18 @@ function nextMonth() {
         <div v-if="withDate">
             <div class="flex justify-between items-center mb-2 h-20">
                 <button class="self-start" @click="prevMonth">Previous</button>
-                <div class="font-bold">{{ currentMonth.format('MMMM YYYY') }}</div>
+                  <div class="font-bold flex items-center">
+                    <select v-model="monthValue" class="p-0 bg-none border-none hover:bg-gray-200 cursor-pointer">
+                        <option v-for="month in months" :key="month.value" :value="month.value">
+                            {{ month.text }}
+                        </option>
+                    </select>
+                    <select v-model="yearValue" class="p-0 bg-none border-none hover:bg-gray-200 cursor-pointer">
+                        <option v-for="year in years" :key="year" :value="year">
+                            {{ year }}
+                        </option>
+                    </select>
+                  </div>
                 <button class="self-start" @click="nextMonth">Next</button>
             </div>
             <div>
