@@ -62,10 +62,12 @@ onBeforeUnmount(() => {
 
 const onStartDateChange = (date) => {
   emit("update:modelValue", [date, props.modelValue?.[1]]);
+  showStartDatePopup.value = false;
 };
 
 const onEndDateChange = (date) => {
   emit("update:modelValue", [props.modelValue?.[0], date]);
+  showEndDatePopup.value = false;
 };
 </script>
 
