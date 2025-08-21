@@ -15,7 +15,7 @@ class EventController extends Controller
     {
         Request::validate([
             'starts_at' => ['nullable', 'date:Y-m-d'],
-            'ends_at' => ['nullable', 'date:Y-m-d'],
+            'ends_at' => ['nullable', 'date:Y-m-d', 'after:starts_at'],
         ]);
 
         return Inertia::render('Events/Index', [

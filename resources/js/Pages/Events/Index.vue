@@ -19,6 +19,7 @@ const props = defineProps({
     },
     starts_at: String,
     ends_at: String,
+    errors: Object,
 });
 
 const filters = ref({
@@ -107,6 +108,11 @@ const onDelete = () => {
                 </div>
                 <div class="w-6/12">
                     <DateRangePicker v-model="dateFilters" is_clearable />
+                    <div v-if="props.errors && Object.keys(props.errors).length" class="mb-4">
+                        <div v-for="(err, key) in props.errors" :key="key" class="text-red-500 text-sm">
+                            {{ err }}
+                        </div>
+                    </div>
                 </div>
                 <div class="w-3/12"></div>
                 <Dialog
