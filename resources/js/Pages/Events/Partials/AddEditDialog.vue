@@ -6,6 +6,7 @@ import Button from "@/Components/Common/Button";
 import Input from "@/Components/Common/Input";
 import DateTimePicker from "@/Components/Common/DateTimePickers/DateTimePicker.vue";
 import moment from "moment";
+import vueFeather from "vue-feather";
 
 const emit = defineEmits(["close"]);
 
@@ -75,11 +76,18 @@ const onClose = () => {
 
 <template>
     <div>
-        <Button @click="onAddNew">
-            <vue-feather type="plus" />
+        <Button
+            @click="onAddNew"
+        >
+            <vueFeather
+                type="plus"
+            />
             <span class="ml-2">Add new</span>
         </Button>
-        <Dialog :show="show" @close="onClose">
+        <Dialog
+            :show="show"
+            @close="onClose"
+        >
             <template #header>{{
                 editing ? "Edit event" : "Add new event"
             }}</template>
@@ -101,10 +109,19 @@ const onClose = () => {
             />
 
             <template #footer>
-                <Button variant="secondary" class="mr-3" @click="onClose"
-                    >Cancel</Button
+                <Button
+                    variant="secondary"
+                    class="mr-3"
+                    @click="onClose"
                 >
-                <Button @click="onSubmit" :disabled="form.title === '' || form.starts_at === null">Submit</Button>
+                    Cancel
+                </Button>
+                <Button
+                    @click="onSubmit"
+                    :disabled="form.title === '' || form.starts_at === null"
+                >
+                    Submit
+                </Button>
             </template>
         </Dialog>
     </div>

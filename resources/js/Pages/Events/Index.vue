@@ -129,7 +129,10 @@ const onDelete = () => {
                 </Dialog>
             </div>
             <div class="card-body">
-                <Table :data="events.data" :headings="['Title', 'Date', 'Actions']">
+                <Table
+                    :data="events.data"
+                    :headings="['Title', 'Date', 'Actions']"
+                >
                     <template #row="{ item }">
                         <td>{{ item.title }}</td>
                         <td>

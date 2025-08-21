@@ -85,7 +85,10 @@ const onEndDateChange = (date) => {
           {{ modelValue?.[0] ? modelValue[0].format(format) : '--/--/----' }}
         </button>
         <button v-if="is_clearable" class="clear-button border-left mx-4" @click="onClearStartDate">
-          <vueFeather type="trash-2" class="w-4 h-4 text-gray-500" />
+          <vueFeather
+            type="trash-2"
+            class="w-4 h-4 text-gray-500"
+          />
         </button>
       </div>
       <div class="absolute z-10 left-0" ref="startpicker">
