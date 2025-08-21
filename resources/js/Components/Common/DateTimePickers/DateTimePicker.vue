@@ -49,6 +49,11 @@ onBeforeUnmount(() => {
   document.removeEventListener("mousedown", clickOutside);
 });
 
+function updateDate(newDate) {
+  showPopup.value = false;
+  $emit('update:modelValue', newDate);
+}
+
 // Format to be used to show the selected value
 const format = computed(() => {
   switch (props.type) {
@@ -88,7 +93,7 @@ const format = computed(() => {
           :model-value="modelValue"
           :with-date="hasDate"
           :with-time="hasTime"
-          @change="$emit('update:modelValue', $event)"
+          @change="updateDate"
         />
       </div>
       <span v-if="inputError" class="text-red-500 text-sm mt-1">{{ inputError }}</span>
