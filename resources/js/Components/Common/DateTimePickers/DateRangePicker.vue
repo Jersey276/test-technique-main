@@ -94,7 +94,7 @@ const onEndDateChange = (date) => {
       <div class="absolute z-10 left-0" ref="startpicker">
         <Calendar
           :show="showStartDatePopup"
-          :value="modelValue?.[0]"
+          :model-value="modelValue?.[0]"
           :with-time="false"
           :with-date="true"
           :is-clearable="true"
@@ -118,7 +118,7 @@ const onEndDateChange = (date) => {
         <div class="absolute z-10 left-0" ref="endpicker">
           <Calendar
             :show="showEndDatePopup"
-            :value="modelValue?.[1]"
+            :model-value="modelValue?.[1]"
             :with-time="false"
             :with-date="true"
             :is-clearable="true"

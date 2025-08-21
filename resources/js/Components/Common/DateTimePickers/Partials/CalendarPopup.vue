@@ -47,11 +47,13 @@ const years = computed(() => {
 const time = ref(selected.value.format('HH:mm'));
 
 
-watch(() => props.value, (newVal) => {
-    if (newVal && moment.isMoment(newVal)) {
-        selected.value = newVal.clone();
+watch(() => props.show, (visible) => {
+    if (visible && props.modelValue && moment.isMoment(props.modelValue)) {
+        selected.value = props.modelValue.clone();
         currentMonth.value = selected.value.clone().startOf('month');
-        time.value = selected.value.time;
+        monthValue.value = currentMonth.value.month();
+        yearValue.value = currentMonth.value.year();
+        time.value = selected.value.format('HH:mm');
     }
 });
 
@@ -140,7 +142,11 @@ function nextMonth() {
                 <div class="grid grid-cols-7 gap-1">
                     <span v-for="n in firstDayOfWeek" :key="`empty-${n}`" class="text-transparent">.</span>
                     <span v-for="day in weeks.flat()" :key="day.format('YYYY-MM-DD')" 
-                        :class="{'bg-blue-500 text-white': selected.isSame(day, 'day'), 'cursor-pointer hover:bg-gray-200': true, ' text-center p-2 rounded': true}"
+                        :class="{
+                            'bg-blue-500 text-white': selected.isSame(day, 'day'),
+                            'cursor-pointer hover:bg-gray-200': true,
+                            'text-center p-2 rounded': true
+                        }"
                         @click="selectDate(day)">
                         {{ day.date() }}
                     </span>

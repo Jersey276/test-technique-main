@@ -85,7 +85,7 @@ const format = computed(() => {
       <div class="absolute z-10 left-0">
         <Calendar
           :show="showPopup"
-          :value="modelValue"
+          :model-value="modelValue"
           :with-date="hasDate"
           :with-time="hasTime"
           @change="$emit('update:modelValue', $event)"
