@@ -4,7 +4,7 @@ import moment from "moment";
 import Calendar from "./Partials/CalendarPopup";
 import vueFeather from "vue-feather";
 
-defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue"]);
 
 const showPopup = ref(false);
 const picker = ref(null);
@@ -51,7 +51,7 @@ onBeforeUnmount(() => {
 
 function updateDate(newDate) {
   showPopup.value = false;
-  $emit('update:modelValue', newDate);
+  emit('update:modelValue', newDate);
 }
 
 // Format to be used to show the selected value
