@@ -1,10 +1,13 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, onBeforeUnmount, ref, watch } from "vue";
 import moment from "moment";
-import Button from "../Button";
 import Calendar from "./Partials/CalendarPopup";
+import vueFeather from "vue-feather";
 
-defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue"]);
+
+const showPopup = ref(false);
+const picker = ref(null);
 
 const props = defineProps({
   modelValue: {
@@ -17,23 +20,39 @@ const props = defineProps({
     validator: (val) => ["date", "datetime", "time"].includes(val),
     default: "datetime",
   },
+  error: String,
+  is_clearable: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-// Represents whether or not the datepicker popup is open
-const showPopup = ref(false);
-
-const onBlur = (event) => {
-  // Check if the clicked item was inside the current component
-  if (!event.currentTarget.contains(event.relatedTarget)) {
+const clickOutside = (event) => {
+  if (picker.value && !picker.value.contains(event.target)) {
     showPopup.value = false;
-  } else {
-    event.currentTarget.focus();
   }
 };
 
-// Whether or not time or date fields need to be shown
-const hasTime = computed(() => props.type !== "date");
-const hasDate = computed(() => props.type !== "time");
+const inputError = ref(props.error || "");
+
+watch(() => props.error, (newError) => {
+  inputError.value = newError || "";
+});
+
+const hasDate = computed(() => props.type !== 'time');
+const hasTime = computed(() => props.type !== 'date');
+
+onMounted(() => {
+  document.addEventListener("mousedown", clickOutside);
+});
+onBeforeUnmount(() => {
+  document.removeEventListener("mousedown", clickOutside);
+});
+
+function updateDate(newDate) {
+  showPopup.value = false;
+  emit('update:modelValue', newDate);
+}
 
 // Format to be used to show the selected value
 const format = computed(() => {
@@ -53,21 +72,31 @@ const format = computed(() => {
     <label class="block font-medium text-sm text-gray-700">
       <span v-if="label">{{ label }}</span>
     </label>
-    <div class="relative">
-      <button
-        class="px-3 h-12 w-full border border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm text-left"
-        @click="showPopup = true"
-        @blur="onBlur"
-      >
-        {{modelValue?.format(format)}}
+    <div class="relative" ref="picker">
+      <div class="border rounded-md flex justify-between">
+        <button
+          class="px-3 h-12 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-l-md shadow-sm text-left"
+          @click="showPopup = true"
+        >
+          {{modelValue?.format(format)}}
+        </button>
+        <button v-if="is_clearable" class="clear-button border-left mx-4" @click="onClearStartDate">
+          <vueFeather
+            type="trash-2"
+            class="w-4 h-4 text-gray-500"
+          />
+        </button>
+      </div>
+      <div class="absolute z-10 left-0">
         <Calendar
           :show="showPopup"
-          :value="modelValue"
+          :model-value="modelValue"
           :with-date="hasDate"
           :with-time="hasTime"
-          @change="$emit('update:modelValue', $event)"
+          @change="updateDate"
         />
-      </button>
+      </div>
+      <span v-if="inputError" class="text-red-500 text-sm mt-1">{{ inputError }}</span>
     </div>
   </div>
 </template>

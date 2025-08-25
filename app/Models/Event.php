@@ -11,13 +11,7 @@ class Event extends Model
 {
     use HasFactory;
 
-    /**
-     * Gets the user the event belongs to.
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $fillable = ['title', 'starts_at'];
 
     /**
      * Scope a query to only include events that occure between two dates.

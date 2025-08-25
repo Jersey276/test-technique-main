@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
@@ -14,22 +15,19 @@ class EventController extends Controller
     {
         Request::validate([
             'starts_at' => ['nullable', 'date:Y-m-d'],
-            'ends_at' => ['nullable', 'date:Y-m-d'],
+            'ends_at' => ['nullable', 'date:Y-m-d', 'after:starts_at'],
         ]);
 
         return Inertia::render('Events/Index', [
             'starts_at' => Request::get('starts_at'),
             'ends_at' => Request::get('ends_at'),
-            'events' => Event::isBetween(Request::get('starts_at'), Request::get('ends_at'))->orderByDate()->get()
+            'events' => Event::isBetween(Request::get('starts_at'), Request::get('ends_at'))->orderByDate()->paginate(Request::get('per_page')),
         ]);
     }
 
-    public function store()
+    public function store(EventRequest $request)
     {
-        $data = Request::validate([
-            'title' => ['required', 'max:255'],
-            'starts_at' => ['required', 'date:Y-m-d H:i']
-        ]);
+        $data = $request->validated();
 
         Event::create([
             ...$data,
@@ -39,12 +37,9 @@ class EventController extends Controller
         return Redirect::back();
     }
 
-    public function update(Event $event)
+    public function update(EventRequest $request, Event $event)
     {
-        $data = Request::validate([
-            'title' => ['required', 'max:255'],
-            'starts_at' => ['required', 'date:Y-m-d H:i']
-        ]);
+        $data = $request->validated();
 
         $event->update([
             ...$data,

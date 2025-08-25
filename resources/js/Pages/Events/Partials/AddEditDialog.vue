@@ -1,9 +1,12 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3";
 import Dialog from "@/Components/Common/DialogModal";
 import Button from "@/Components/Common/Button";
 import Input from "@/Components/Common/Input";
+import DateTimePicker from "@/Components/Common/DateTimePickers/DateTimePicker.vue";
+import moment from "moment";
+import vueFeather from "vue-feather";
 
 const emit = defineEmits(["close"]);
 
@@ -20,8 +23,18 @@ const editing = ref(false);
 const form = useForm({
     title: "",
     starts_at: null,
-    ends_at: null,
+    //ends_at: null,
 });
+
+watch (() => props.itemToEdit, (itemSelected) => {
+    if (itemSelected !== null) {
+        form.reset();
+        form.title = itemSelected.title;
+        form.starts_at = moment(itemSelected.starts_at);
+        show.value = true;
+        editing.value = true;
+    }
+})
 
 // Called when the user clicks on the "Add new" button
 const onAddNew = () => {
@@ -47,7 +60,7 @@ const onSubmit = () => {
         form.transform(transform).put(
             route("events.update", props.itemToEdit.id),
             requestParams,
-        );
+        )
     } else {
         form.transform(transform).post(route("events.store"), requestParams);
     }
@@ -63,11 +76,18 @@ const onClose = () => {
 
 <template>
     <div>
-        <Button @click="onAddNew">
-            <vue-feather type="plus" />
+        <Button
+            @click="onAddNew"
+        >
+            <vueFeather
+                type="plus"
+            />
             <span class="ml-2">Add new</span>
         </Button>
-        <Dialog :show="show" @close="onClose">
+        <Dialog
+            :show="show"
+            @close="onClose"
+        >
             <template #header>{{
                 editing ? "Edit event" : "Add new event"
             }}</template>
@@ -77,13 +97,31 @@ const onClose = () => {
                 label="Title"
                 v-model="form.title"
                 class="mb-6"
+                :error="form.errors.title"
+            />
+
+            <DateTimePicker
+                name="starts_at"
+                label="Starts at"
+                v-model="form.starts_at"
+                class="mb-6"
+                :error="form.errors.starts_at"
             />
 
             <template #footer>
-                <Button variant="secondary" class="mr-3" @click="onClose"
-                    >Cancel</Button
+                <Button
+                    variant="secondary"
+                    class="mr-3"
+                    @click="onClose"
                 >
-                <Button @click="onSubmit">Submit</Button>
+                    Cancel
+                </Button>
+                <Button
+                    @click="onSubmit"
+                    :disabled="form.title === '' || form.starts_at === null"
+                >
+                    Submit
+                </Button>
             </template>
         </Dialog>
     </div>

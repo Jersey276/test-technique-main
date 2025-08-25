@@ -17,7 +17,8 @@ class CreateEventsTable extends Migration
             $table->id();
             $table->string('title');
             $table->timestamp('starts_at');
-            $table->timestamp('ends_at');
+            /* Unused ends_at */
+            //$table->timestamp('ends_at');
             $table->timestamps();
         });
     }
