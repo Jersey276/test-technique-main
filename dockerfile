@@ -23,6 +23,8 @@ COPY --from=composer:2.4.1 /usr/bin/composer /usr/bin/composer
 
 COPY . /var/www/html
 
+RUN /usr/bin/composer install --no-interaction --prefer-dist --optimize-autoloader
+
 ENV USER=www-data
 RUN chown ${USER}:${USER} -R /var/www/html/bootstrap
 RUN chown ${USER}:${USER} -R /var/www/html/storage
