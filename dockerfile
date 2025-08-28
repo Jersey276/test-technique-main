@@ -21,8 +21,7 @@ WORKDIR /var/www/html
 # Get composer
 COPY --from=composer:2.4.1 /usr/bin/composer /usr/bin/composer
 
-COPY ./bootstrap /var/www/html/bootstrap
-COPY ./storage /var/www/html/storage
+COPY . /var/www/html
 
 ENV USER=www-data
 RUN chown ${USER}:${USER} -R /var/www/html/bootstrap
