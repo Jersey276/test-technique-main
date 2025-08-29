@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch, computed } from "vue";
 import moment from "moment";
-import { isArray, range } from "lodash";
+import { isArray, isObject, range } from "lodash";
 
 const emit = defineEmits(['change', 'range-change']);
 
@@ -56,20 +56,23 @@ const time = ref(selectedStart.value.format('HH:mm'));
 
 
 watch(() => props.show, (visible) => {
-    if (visible && props.modelValue && moment.isMoment(props.modelValue[0])) {
-        if (props.range) {
+    if (visible && props.modelValue) {
+        if (props.range && Array.isArray(props.modelValue) && moment.isMoment(props.modelValue[0])) {
             selectedStart.value = props.modelValue[0].clone();
             selecting.value = false;
             if (props.modelValue[1] && moment.isMoment(props.modelValue[1])) {
                 selectedEnd.value = props.modelValue[1].clone();
+            } else {
+                selectedEnd.value = null;
             }
-        } else {
+        } else if (!props.range && moment.isMoment(props.modelValue)) {
             selectedStart.value = props.modelValue.clone();
+            selectedEnd.value = null;
         }
         if (props.withDate){
-        currentMonth.value = selectedStart.value.clone().startOf('month');
-        monthValue.value = currentMonth.value.month();
-        yearValue.value = currentMonth.value.year();
+            currentMonth.value = selectedStart.value.clone().startOf('month');
+            monthValue.value = currentMonth.value.month();
+            yearValue.value = currentMonth.value.year();
         }
         if (props.withTime) {
             time.value = selectedStart.value.format('HH:mm');
