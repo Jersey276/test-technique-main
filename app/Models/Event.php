@@ -11,7 +11,7 @@ class Event extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'starts_at'];
+    protected $fillable = ['title', 'starts_at', 'ends_at'];
 
     /**
      * Scope a query to only include events that occure between two dates.
