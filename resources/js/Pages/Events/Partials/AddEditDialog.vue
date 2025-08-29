@@ -49,7 +49,7 @@ const onSubmit = () => {
     const transform = (data) => ({
         ...data,
         starts_at: data.starts_at.format("YYYY-MM-DD HH:mm"),
-        ends_at: data.ends_at.format("YY-MM-DD HH:mm"),
+        ends_at: data.ends_at.format("YYYY-MM-DD HH:mm"),
     });
 
     const requestParams = {
