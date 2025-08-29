@@ -41,7 +41,7 @@ watch(dateFilters, (newRange) => {
     filters.value = {
         ...filters.value,
         starts_at : newRange[0]? newRange[0].format("YYYY-MM-DD"):null,
-        ends_at : newRange[1]? newRange[1].format("YYYY-MM-DD"):null,
+        ends_at : newRange[1] && newRange[1] > newRange[0]? newRange[1].format("YYYY-MM-DD"):null,
         page: 1
     }
 }, {deep : true});
