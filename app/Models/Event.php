@@ -23,11 +23,11 @@ class Event extends Model
      */
     public function scopeIsBetween($query, $startsAt, $endsAt)
     {
-        if ($startsAt) {
-            $query->where('events.starts_at', '>', $startsAt);
-        }
-        if ($endsAt) {
-            $query->where('events.starts_at', '<', $endsAt);
+        if ($startsAt && !$endsAt) {
+            $query->whereDate('events.starts_at', '=', $startsAt);
+        } elseif ($startsAt && $endsAt) {
+            $query->whereDate('events.starts_at', '>', $startsAt)
+                  ->whereDate('events.starts_at', '<', $endsAt);
         }
         return $query;
     }
