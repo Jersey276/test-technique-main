@@ -23,7 +23,7 @@ const editing = ref(false);
 const form = useForm({
     title: "",
     starts_at: null,
-    //ends_at: null,
+    ends_at: null,
 });
 
 watch (() => props.itemToEdit, (itemSelected) => {
@@ -31,6 +31,7 @@ watch (() => props.itemToEdit, (itemSelected) => {
         form.reset();
         form.title = itemSelected.title;
         form.starts_at = moment(itemSelected.starts_at);
+        form.ends_at = moment(itemSelected.ends_at);
         show.value = true;
         editing.value = true;
     }
@@ -48,6 +49,7 @@ const onSubmit = () => {
     const transform = (data) => ({
         ...data,
         starts_at: data.starts_at.format("YYYY-MM-DD HH:mm"),
+        ends_at: data.ends_at.format("YY-MM-DD HH:mm"),
     });
 
     const requestParams = {
@@ -91,23 +93,30 @@ const onClose = () => {
             <template #header>{{
                 editing ? "Edit event" : "Add new event"
             }}</template>
-
+            <div class="grid grid-cols-2 gap-2">
             <Input
                 name="title"
                 label="Title"
                 v-model="form.title"
-                class="mb-6"
+                class="mb-6 col-span-2"
                 :error="form.errors.title"
             />
+                <DateTimePicker
+                    name="starts_at"
+                    label="Starts at"
+                    v-model="form.starts_at"
+                    class="mb-6"
+                    :error="form.errors.starts_at"
+                />
 
-            <DateTimePicker
-                name="starts_at"
-                label="Starts at"
-                v-model="form.starts_at"
-                class="mb-6"
-                :error="form.errors.starts_at"
-            />
-
+                <DateTimePicker
+                    name="ends_at"
+                    label="Ends at"
+                    v-model="form.ends_at"
+                    class="mb-6"
+                    :error="form.errors.ends_at"
+                />
+            </div>
             <template #footer>
                 <Button
                     variant="secondary"
