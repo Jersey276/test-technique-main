@@ -21,36 +21,22 @@ const props = defineProps({
   },
 });
 
-const startpicker = ref(null);
-const endpicker = ref(null);
+const rangePicker = ref(null);
 
-// Represents whether or not the datepicker popup is open for each field
-const showStartDatePopup = ref(false);
-const showEndDatePopup = ref(false);
+const showRangeDatePopup = ref(false);
 
 const clickOutside = (event) => {
   if (
-    showStartDatePopup.value &&
-    startpicker.value &&
-    !startpicker.value.contains(event.target)
+    showRangeDatePopup.value &&
+    rangePicker.value &&
+    !rangePicker.value.contains(event.target)
   ) {
-    showStartDatePopup.value = false;
-  }
-  if (
-    showEndDatePopup.value &&
-    endpicker.value &&
-    !endpicker.value.contains(event.target)
-  ) {
-    showEndDatePopup.value = false;
+    showRangeDatePopup.value = false;
   }
 };
 
-function onClearStartDate() {
-  emit("update:modelValue", [null, props.modelValue?.[1]]);
-}
-
-function onClearEndDate() {
-  emit("update:modelValue", [props.modelValue?.[0], null]);
+function onClearRange() {
+  emit("update:modelValue", [null, null]);
 }
 
 onMounted(() => {
@@ -60,69 +46,39 @@ onBeforeUnmount(() => {
   document.removeEventListener("mousedown", clickOutside);
 });
 
-const onStartDateChange = (date) => {
-  emit("update:modelValue", [date, props.modelValue?.[1]]);
-  showStartDatePopup.value = false;
+function onRangeChange(range) {
+  emit("update:modelValue", range);
+  showRangeDatePopup.value = false;
 };
 
-const onEndDateChange = (date) => {
-  emit("update:modelValue", [props.modelValue?.[0], date]);
-  showEndDatePopup.value = false;
-};
 </script>
 
 <template>
   <div class="grid grid-cols-2 gap-2">
-    <label class="block font-medium text-sm text-gray-700">
-      <span>From</span>
-    </label>
-    <label class="block font-medium text-sm text-gray-700">
+    <label class="block font-medium text-sm text-gray-700 col-span-2">
       <span>To</span>
     </label>
-    <div class="relative">
-      <div class="border rounded-md flex justify-between">
-        <button class="date-button" @click="showStartDatePopup = true">
-          {{ modelValue?.[0] ? modelValue[0].format(format) : '--/--/----' }}
-        </button>
-        <button v-if="is_clearable" class="clear-button border-left mx-4" @click="onClearStartDate">
-          <vueFeather
-            type="trash-2"
-            class="w-4 h-4 text-gray-500"
-          />
-        </button>
-      </div>
-      <div class="absolute z-10 left-0" ref="startpicker">
-        <Calendar
-          :show="showStartDatePopup"
-          :model-value="modelValue?.[0]"
-          :with-time="false"
-          :with-date="true"
-          :is-clearable="true"
-          @change="onStartDateChange"
-        />
-      </div>
-    </div>
-    <div class="relative">
+    <div class="relative col-span-2">
       <div class="border rounded-md flex justify-between">
         <button
-          ref="endDatePicker"
+          ref="rangePicker"
           class="date-button"
-          @click="showEndDatePopup = true"
+          @click="showRangeDatePopup = true"
         >
-          {{ modelValue?.[1] ? modelValue[1].format(format) : '--/--/----' }}
+          {{ modelValue?.[0] ? modelValue[0].format(format) : '--/--/----' }}{{ modelValue?.[1] && modelValue[1] > modelValue[0] ? ' - ' + modelValue[1].format(format) : '' }}
         </button>
-        <button v-if="is_clearable" class="clear-button border-left mx-4" @click="onClearEndDate">
+        <button v-if="is_clearable" class="clear-button border-left mx-4" @click="onClearRange">
           <vueFeather type="trash-2" class="w-4 h-4 text-gray-500" />
         </button>
       </div>
-        <div class="absolute z-10 left-0" ref="endpicker">
+        <div class="absolute z-10 left-0" ref="rangePicker">
           <Calendar
-            :show="showEndDatePopup"
-            :model-value="modelValue?.[1]"
+            :show="showRangeDatePopup"
+            :model-value="modelValue"
             :with-time="false"
             :with-date="true"
-            :is-clearable="true"
-            @change="onEndDateChange"
+            :range="true"
+            @range-change="onRangeChange"
           />
         </div>
       </div>
