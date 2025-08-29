@@ -21,9 +21,11 @@ class EventFactory extends Factory
      */
     public function definition()
     {
+        $date = $this->faker->dateTimeThisYear();
         return [
             'title' => $this->faker->jobTitle(),
-            'starts_at' => $this->faker->dateTimeThisYear()
+            'starts_at' => $date,
+            'ends_at' => (clone $date)->modify('+'.rand(1, 720).' hours')
         ];
     }
 }

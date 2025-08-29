@@ -137,16 +137,16 @@ const onDelete = () => {
             <div class="card-body">
                 <Table
                     :data="events.data"
-                    :headings="['Title', 'Date', 'Actions']"
+                    :headings="['Title', 'Start', 'End', 'Actions']"
                 >
                     <template #row="{ item }">
                         <td>{{ item.title }}</td>
                         <td>
                             {{ moment(item.starts_at).format("HH:mm DD/MM/YYYY") }}
                         </td>
-                        <!--<td>
+                        <td>
                             {{ moment(item.ends_at).format("HH:mm DD/MM/YYYY") }}
-                        </td>-->
+                        </td>
                         <td>
                             <span
                                 class="px-2 text-gray-700 hover:text-blue-500 cursor-pointer transition"
