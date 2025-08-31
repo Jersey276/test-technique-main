@@ -60,6 +60,6 @@ services:
         ports:
             - "80:80"
         volumes:
-            - ".:/var/www/html:delegated"
+            # - ".:/var/www/html:delegated"
             - "web-bootstrap:/var/www/html/bootstrap"
             - "web-storage:/var/www/html/storage"

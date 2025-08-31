@@ -41,7 +41,7 @@ watch(dateFilters, (newRange) => {
     filters.value = {
         ...filters.value,
         starts_at : newRange[0]? newRange[0].format("YYYY-MM-DD"):null,
-        ends_at : newRange[1]? newRange[1].format("YYYY-MM-DD"):null,
+        ends_at : newRange[1] && newRange[1] > newRange[0]? newRange[1].format("YYYY-MM-DD"):null,
         page: 1
     }
 }, {deep : true});
@@ -137,16 +137,16 @@ const onDelete = () => {
             <div class="card-body">
                 <Table
                     :data="events.data"
-                    :headings="['Title', 'Date', 'Actions']"
+                    :headings="['Title', 'Start', 'End', 'Actions']"
                 >
                     <template #row="{ item }">
                         <td>{{ item.title }}</td>
                         <td>
                             {{ moment(item.starts_at).format("HH:mm DD/MM/YYYY") }}
                         </td>
-                        <!--<td>
+                        <td>
                             {{ moment(item.ends_at).format("HH:mm DD/MM/YYYY") }}
-                        </td>-->
+                        </td>
                         <td>
                             <span
                                 class="px-2 text-gray-700 hover:text-blue-500 cursor-pointer transition"
