@@ -27,8 +27,8 @@ RUN /usr/bin/composer install --no-interaction --prefer-dist --optimize-autoload
 
 ENV USER=www-data
 RUN chown ${USER}:${USER} -R /var/www/html/bootstrap
-RUN chown ${USER}:${USER} -R /var/www/html/storage
-RUN chmod -R 775 /var/www/html/storage
+RUN echo "chown -R www-data:www-data /var/www/html/storage && chmod -R 775 /var/www/html/storage" >> /startup.sh
+RUN chmod +x /startup.sh
 
 # Get Node and yarn
 COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
@@ -40,4 +40,4 @@ RUN npm config set cache /tmp --global
 
 EXPOSE 80
 
-CMD [ "apache2ctl", "-D", "FOREGROUND" ]
+CMD ["/bin/bash", "-c", "/startup.sh && apache2ctl -D FOREGROUND"]
