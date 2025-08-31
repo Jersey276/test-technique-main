@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "baseRul": ".",
+        "baseUrl": ".",
         "paths": {
-            "@/*": "./resources/js/*"
+            "@/*": ["./resources/js/*"]
         }
     },
     "exclude": ["node_modules"]
