@@ -28,6 +28,7 @@ RUN /usr/bin/composer install --no-interaction --prefer-dist --optimize-autoload
 ENV USER=www-data
 RUN chown ${USER}:${USER} -R /var/www/html/bootstrap
 RUN chown ${USER}:${USER} -R /var/www/html/storage
+RUN chmod -R 775 /var/www/html/storage
 
 # Get Node and yarn
 COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
